@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow read and write across collections so the application and all roles
+    // can sync trips, bookings, tickets, payments, vehicles, and users with Firestore.
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

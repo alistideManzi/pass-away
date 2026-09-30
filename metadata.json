@@ -1,0 +1,6 @@
+{
+  "name": "RwandaGo Express - Online Ticket Booking System",
+  "description": "Professional intercity bus ticket booking platform with real-time seat reservation, Mobile Money payments, digital QR tickets, staff verification, and administrator dashboard.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

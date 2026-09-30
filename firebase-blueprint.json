@@ -1,0 +1,184 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with role-based access control for customers, staff, and admins",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "fullName": { "type": "string" },
+        "phone": { "type": "string" },
+        "nationalId": { "type": "string" },
+        "role": { "type": "string", "enum": ["customer", "staff", "admin"] },
+        "adminSubRole": { "type": "string", "enum": ["super_admin", "trip_manager", "finance_admin"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "email", "fullName", "role"]
+    },
+    "Trip": {
+      "title": "Trip",
+      "description": "Scheduled trip between any Rwandan cities or destinations",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "origin": { "type": "string" },
+        "destination": { "type": "string" },
+        "departureDate": { "type": "string" },
+        "departureTime": { "type": "string" },
+        "arrivalTime": { "type": "string" },
+        "operatorName": { "type": "string" },
+        "vehicleReg": { "type": "string" },
+        "priceRwf": { "type": "number" },
+        "totalSeats": { "type": "number" },
+        "bookedSeats": { "type": "array" },
+        "reservedSeats": { "type": "array" },
+        "status": { "type": "string", "enum": ["SCHEDULED", "BOARDING", "DEPARTED", "CANCELLED", "COMPLETED"] },
+        "busType": { "type": "string" },
+        "createdBy": { "type": "string" }
+      },
+      "required": ["id", "origin", "destination", "departureDate", "departureTime", "priceRwf", "totalSeats", "status"]
+    },
+    "Vehicle": {
+      "title": "Vehicle",
+      "description": "Fleet bus and transportation vehicle registry",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "regNumber": { "type": "string" },
+        "operatorName": { "type": "string" },
+        "model": { "type": "string" },
+        "totalSeats": { "type": "number" },
+        "status": { "type": "string", "enum": ["ACTIVE", "MAINTENANCE", "RETIRED"] }
+      },
+      "required": ["id", "regNumber", "operatorName", "totalSeats", "status"]
+    },
+    "Route": {
+      "title": "Route",
+      "description": "City-to-city transport corridors and routes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "origin": { "type": "string" },
+        "destination": { "type": "string" },
+        "distanceKm": { "type": "number" },
+        "estimatedDuration": { "type": "string" },
+        "basePriceRwf": { "type": "number" },
+        "popular": { "type": "boolean" },
+        "description": { "type": "string" }
+      },
+      "required": ["id", "origin", "destination", "basePriceRwf"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "Passenger ticket bookings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "bookingReference": { "type": "string" },
+        "userId": { "type": "string" },
+        "tripId": { "type": "string" },
+        "passengers": { "type": "array" },
+        "selectedSeats": { "type": "array" },
+        "baseAmount": { "type": "number" },
+        "discountAmount": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "bookingStatus": { "type": "string", "enum": ["PENDING", "CONFIRMED", "CANCELLED", "COMPLETED"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "paymentId": { "type": "string" },
+        "paymentMethod": { "type": "string" }
+      },
+      "required": ["id", "bookingReference", "userId", "tripId", "totalAmount", "bookingStatus"]
+    },
+    "Ticket": {
+      "title": "Ticket",
+      "description": "Verifiable digital tickets with encrypted QR data",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "bookingId": { "type": "string" },
+        "ticketNumber": { "type": "string" },
+        "tripId": { "type": "string" },
+        "passengerName": { "type": "string" },
+        "passengerPhone": { "type": "string" },
+        "seatNumber": { "type": "string" },
+        "origin": { "type": "string" },
+        "destination": { "type": "string" },
+        "departureDate": { "type": "string" },
+        "departureTime": { "type": "string" },
+        "priceRwf": { "type": "number" },
+        "qrCodeData": { "type": "string" },
+        "ticketStatus": { "type": "string", "enum": ["VALID", "BOARDED", "CANCELLED", "EXPIRED"] },
+        "issuedAt": { "type": "string", "format": "date-time" },
+        "boardedAt": { "type": "string", "format": "date-time" },
+        "boardedBy": { "type": "string" }
+      },
+      "required": ["id", "ticketNumber", "bookingId", "tripId", "passengerName", "seatNumber", "ticketStatus"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "Financial transactions and audit logs",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "bookingId": { "type": "string" },
+        "transactionReference": { "type": "string" },
+        "amount": { "type": "number" },
+        "paymentMethod": { "type": "string" },
+        "paymentStatus": { "type": "string", "enum": ["PENDING", "SUCCESS", "FAILED", "REFUNDED"] },
+        "accountOrPhone": { "type": "string" },
+        "paidAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "bookingId", "transactionReference", "amount", "paymentStatus"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User notifications for booking and ticket updates",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string", "enum": ["ticket", "alert", "promo"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "read": { "type": "boolean" }
+      },
+      "required": ["id", "userId", "title", "message", "read"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User account profiles with RBAC roles"
+    },
+    "/trips/{tripId}": {
+      "schema": "Trip",
+      "description": "Transport trips and seat occupation registries"
+    },
+    "/vehicles/{vehicleId}": {
+      "schema": "Vehicle",
+      "description": "Fleet vehicles and capacities"
+    },
+    "/routes/{routeId}": {
+      "schema": "Route",
+      "description": "Intercity and regional transit routes"
+    },
+    "/bookings/{bookingId}": {
+      "schema": "Booking",
+      "description": "Confirmed and pending passenger reservations"
+    },
+    "/tickets/{ticketId}": {
+      "schema": "Ticket",
+      "description": "Issued digital tickets with boarding status"
+    },
+    "/payments/{paymentId}": {
+      "schema": "Payment",
+      "description": "Transaction logs and receipts"
+    },
+    "/notifications/{notifId}": {
+      "schema": "Notification",
+      "description": "In-app notifications"
+    }
+  }
+}
